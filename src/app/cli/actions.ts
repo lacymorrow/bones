@@ -64,37 +64,49 @@ export async function addComponent(input: AddComponentInput) {
 		]
 
 		if (overwrite) {
-			args.push('--overwrite')
+			args.push('-o') // Using short form for overwrite flag
 		}
 
 		if (targetPath) {
 			args.push('--path', targetPath)
 		}
 
+		console.log('Running command:', 'shadcn', args.join(' ')) // Debug log
+
 		return new Promise((resolve, reject) => {
 			let errorOutput = ''
+			let stdoutOutput = ''
 
 			const child = spawn(path.join(cwd, 'node_modules', '.bin', 'shadcn'), args, {
 				cwd,
-				stdio: ['inherit', 'inherit', 'pipe'], // Pipe stderr so we can capture it
+				stdio: 'pipe', // Capture all output
+			})
+
+			child.stdout?.on('data', (data) => {
+				const output = data.toString()
+				stdoutOutput += output
+				console.log('stdout:', output) // Debug log
 			})
 
 			child.stderr?.on('data', (data) => {
 				const output = data.toString()
 				errorOutput += output
+				console.log('stderr:', output) // Debug log
 
-				// Check for specific error messages
-				if (output.includes('already exists') && !overwrite) {
+				// Only reject if it's a real error and not just CLI output
+				if (output.toLowerCase().includes('error') && !overwrite) {
 					reject(new Error(`Component ${name} already exists. Use the overwrite option to replace it.`))
 				}
 			})
 
 			child.on('error', (err) => {
+				console.error('Spawn error:', err) // Debug log
 				reject(new Error(`Failed to start command: ${err.message}`))
 			})
 
 			child.on('close', (code) => {
-				if (code === 0) {
+				console.log('Exit code:', code) // Debug log
+				if (code === 0 || (code === 1 && overwrite)) {
 					resolve({ success: true })
 				} else {
 					// Clean up error message for better user experience

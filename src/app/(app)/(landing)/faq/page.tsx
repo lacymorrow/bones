@@ -1,9 +1,9 @@
 import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/accordion";
 import { siteConfig } from "@/config/site";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";

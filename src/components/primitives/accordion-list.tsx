@@ -1,9 +1,9 @@
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/accordion";
 import { Separator } from "@/components/ui/separator";
 
 export interface AccordionItem {

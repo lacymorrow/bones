@@ -442,7 +442,7 @@ importers:
         version: 5.0.0(@types/react@19.0.2)(acorn@8.14.0)(react@19.0.0)
       next-pwa:
         specifier: 5.6.0
-        version: 5.6.0(@babel/core@7.26.0)(@types/babel__core@7.20.5)(esbuild@0.19.12)(next@15.1.2(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(webpack@5.96.1(esbuild@0.19.12))
+        version: 5.6.0(@babel/core@7.26.0)(@types/babel__core@7.20.5)(esbuild@0.19.12)(next@15.1.2(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(webpack@5.96.1(esbuild@0.24.0))
       next-safe-route:
         specifier: 0.0.20
         version: 0.0.20
@@ -15968,7 +15968,7 @@ snapshots:
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
       source-map: 0.7.4
     optionalDependencies:
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
     transitivePeerDependencies:
       - acorn
       - supports-color
@@ -18075,14 +18075,14 @@ snapshots:
     dependencies:
       '@remotion/studio': 4.0.242(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@remotion/studio-shared': 4.0.242(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      css-loader: 5.2.7(webpack@5.96.1(esbuild@0.19.12))
+      css-loader: 5.2.7(webpack@5.96.1(esbuild@0.24.0))
       esbuild: 0.24.0
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
       react-refresh: 0.9.0
       remotion: 4.0.242(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       source-map: 0.7.3
-      style-loader: 2.0.0(webpack@5.96.1(esbuild@0.19.12))
+      style-loader: 2.0.0(webpack@5.96.1(esbuild@0.24.0))
       webpack: 5.96.1(esbuild@0.24.0)
     transitivePeerDependencies:
       - '@swc/core'
@@ -20185,14 +20185,14 @@ snapshots:
 
   b4a@1.6.7: {}
 
-  babel-loader@8.4.1(@babel/core@7.26.0)(webpack@5.96.1(esbuild@0.19.12)):
+  babel-loader@8.4.1(@babel/core@7.26.0)(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       '@babel/core': 7.26.0
       find-cache-dir: 3.3.2
       loader-utils: 2.0.4
       make-dir: 3.1.0
       schema-utils: 2.7.1
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
 
   babel-plugin-emotion@10.2.2:
     dependencies:
@@ -20677,10 +20677,10 @@ snapshots:
     dependencies:
       escape-string-regexp: 5.0.0
 
-  clean-webpack-plugin@4.0.0(webpack@5.96.1(esbuild@0.19.12)):
+  clean-webpack-plugin@4.0.0(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       del: 4.1.1
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
 
   cli-cursor@4.0.0:
     dependencies:
@@ -21013,7 +21013,7 @@ snapshots:
 
   crypto@1.0.1: {}
 
-  css-loader@5.2.7(webpack@5.96.1(esbuild@0.19.12)):
+  css-loader@5.2.7(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.4.49)
       loader-utils: 2.0.4
@@ -21025,7 +21025,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       schema-utils: 3.3.0
       semver: 7.6.3
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
 
   css-select@5.1.0:
     dependencies:
@@ -24881,14 +24881,14 @@ snapshots:
       - acorn
       - supports-color
 
-  next-pwa@5.6.0(@babel/core@7.26.0)(@types/babel__core@7.20.5)(esbuild@0.19.12)(next@15.1.2(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(webpack@5.96.1(esbuild@0.19.12)):
+  next-pwa@5.6.0(@babel/core@7.26.0)(@types/babel__core@7.20.5)(esbuild@0.19.12)(next@15.1.2(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
-      babel-loader: 8.4.1(@babel/core@7.26.0)(webpack@5.96.1(esbuild@0.19.12))
-      clean-webpack-plugin: 4.0.0(webpack@5.96.1(esbuild@0.19.12))
+      babel-loader: 8.4.1(@babel/core@7.26.0)(webpack@5.96.1(esbuild@0.24.0))
+      clean-webpack-plugin: 4.0.0(webpack@5.96.1(esbuild@0.24.0))
       globby: 11.1.0
       next: 15.1.2(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(@playwright/test@1.49.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4)
       terser-webpack-plugin: 5.3.11(esbuild@0.19.12)(webpack@5.96.1(esbuild@0.19.12))
-      workbox-webpack-plugin: 6.6.0(@types/babel__core@7.20.5)(webpack@5.96.1(esbuild@0.19.12))
+      workbox-webpack-plugin: 6.6.0(@types/babel__core@7.20.5)(webpack@5.96.1(esbuild@0.24.0))
       workbox-window: 6.6.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -27316,11 +27316,11 @@ snapshots:
       '@tokenizer/token': 0.3.0
       peek-readable: 5.3.1
 
-  style-loader@2.0.0(webpack@5.96.1(esbuild@0.19.12)):
+  style-loader@2.0.0(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
 
   style-to-object@0.4.4:
     dependencies:
@@ -27473,7 +27473,7 @@ snapshots:
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.37.0
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
     optionalDependencies:
       esbuild: 0.19.12
 
@@ -27484,7 +27484,7 @@ snapshots:
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.37.0
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
     optionalDependencies:
       esbuild: 0.24.0
 
@@ -28380,36 +28380,6 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack@5.96.1(esbuild@0.19.12):
-    dependencies:
-      '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.6
-      '@webassemblyjs/ast': 1.14.1
-      '@webassemblyjs/wasm-edit': 1.14.1
-      '@webassemblyjs/wasm-parser': 1.14.1
-      acorn: 8.14.0
-      browserslist: 4.24.3
-      chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.18.0
-      es-module-lexer: 1.5.4
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.0
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 3.3.0
-      tapable: 2.2.1
-      terser-webpack-plugin: 5.3.11(esbuild@0.19.12)(webpack@5.96.1(esbuild@0.19.12))
-      watchpack: 2.4.2
-      webpack-sources: 3.2.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-
   webpack@5.96.1(esbuild@0.24.0):
     dependencies:
       '@types/eslint-scope': 3.7.7
@@ -28629,12 +28599,12 @@ snapshots:
 
   workbox-sw@6.6.0: {}
 
-  workbox-webpack-plugin@6.6.0(@types/babel__core@7.20.5)(webpack@5.96.1(esbuild@0.19.12)):
+  workbox-webpack-plugin@6.6.0(@types/babel__core@7.20.5)(webpack@5.96.1(esbuild@0.24.0)):
     dependencies:
       fast-json-stable-stringify: 2.1.0
       pretty-bytes: 5.6.0
       upath: 1.2.0
-      webpack: 5.96.1(esbuild@0.19.12)
+      webpack: 5.96.1(esbuild@0.24.0)
       webpack-sources: 1.4.3
       workbox-build: 6.6.0(@types/babel__core@7.20.5)
     transitivePeerDependencies:
