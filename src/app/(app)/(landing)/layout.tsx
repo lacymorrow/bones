@@ -1,5 +1,5 @@
-import { Footer } from "@/components/footers/extended-footer";
-import { Header } from "@/components/headers/extended-header";
+import { Footer } from "@/components/footers/footer";
+import { Header } from "@/components/headers/header";
 import MainLayout from "@/components/layouts/main-layout";
 import type React from "react";
 

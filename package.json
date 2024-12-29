@@ -32,6 +32,7 @@
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config=vitest.config.browser.ts",
+    "test:node": "vitest --config=vitest.config.node.ts",
     "typecheck": "tsc --noEmit",
     "gen:registry": "tsx src/app/ui/registry/generate-registry.ts"
   },
