@@ -4,6 +4,7 @@ import { GeistSans as fontSans } from "geist/font/sans";
 import { Noto_Serif_Display as FontSerif } from "next/font/google";
 // import localFont from "next/font/local";
 
+import { Attribution } from "@/components/blocks/attribution";
 import { Analytics } from "@/components/primitives/analytics";
 import { ErrorToast } from "@/components/primitives/error-toast";
 import { WebVitals } from "@/components/primitives/web-vitals";
@@ -57,6 +58,8 @@ export function RootLayout({
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
 									{children}
+
+									<Attribution />
 
 									{/* Metrics */}
 									<Analytics />
