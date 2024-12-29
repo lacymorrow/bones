@@ -1,4 +1,3 @@
-import { AsciiCube } from "@/components/blocks/ascii-cube";
 import { Balancer } from "@/components/primitives/balancer";
 import { Link } from "@/components/primitives/link";
 import { buttonVariants } from "@/components/ui/button";
@@ -6,8 +5,6 @@ import { buttonVariants } from "@/components/ui/button";
 export default function Page() {
 	return (
 		<>
-			<AsciiCube />
-
 			<div className="container absolute inset-0 flex flex-col items-center justify-start p-16 gap-xl">
 				<Balancer className="text-[100px] font-bold"><span className="font-serif">Bones Stack</span></Balancer>
 				<p className="text-lg">Build apps fast with Shadcn/UI. Features Next.js v15, Tailwind CSS v4, and full AI agent support.</p>
