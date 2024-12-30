@@ -27,6 +27,7 @@ export default function RegistryPage() {
         return
       }
 
+      console.log('Full registry data:', JSON.stringify(data, null, 2))
       setRegistry(data)
       setLoading(false)
     }
@@ -35,6 +36,7 @@ export default function RegistryPage() {
   }, [])
 
   async function handleComponentClick(component: RegistryComponent) {
+    console.log('Clicked component:', JSON.stringify(component, null, 2))
     setSelectedComponent(component)
     setLoadingDetails(true)
     setComponentDetails(null)
@@ -57,31 +59,39 @@ export default function RegistryPage() {
     return (
       <ScrollArea className="h-[600px] rounded-md border">
         <div className="p-4">
-          {registry.registry.map((group) => (
-            <div key={group.type} className="mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <h2 className="text-lg font-semibold capitalize">{group.type}</h2>
-                <Badge variant="secondary">
-                  {registry.stats.componentsByType[group.type] || 0}
-                </Badge>
+          {registry.registry.map((group) => {
+            console.log('Processing group:', group.type, 'Components:', JSON.stringify(group.components, null, 2))
+            return (
+              <div key={group.type} className="mb-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <h2 className="text-lg font-semibold capitalize">
+                    {group.type.replace('registry:', '')}
+                  </h2>
+                  <Badge variant="secondary">
+                    {registry.stats.componentsByType[group.type] || 0}
+                  </Badge>
+                </div>
+                <div className="space-y-1">
+                  {group.components.map((component) => {
+                    console.log('Rendering component:', component.name, 'with path:', component.path)
+                    return (
+                      <button
+                        key={component.name}
+                        onClick={() => handleComponentClick(component)}
+                        className={`w-full text-left px-3 py-2 rounded-lg hover:bg-accent ${
+                          selectedComponent?.name === component.name 
+                            ? 'bg-accent' 
+                            : ''
+                        }`}
+                      >
+                        {component.name}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-              <div className="space-y-1">
-                {group.components.map((component) => (
-                  <button
-                    key={component.name}
-                    onClick={() => handleComponentClick(component)}
-                    className={`w-full text-left px-3 py-2 rounded-lg hover:bg-accent ${
-                      selectedComponent?.name === component.name 
-                        ? 'bg-accent' 
-                        : ''
-                    }`}
-                  >
-                    {component.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </ScrollArea>
     )
@@ -127,8 +137,8 @@ export default function RegistryPage() {
           <div className="flex flex-wrap gap-1">
             {componentDetails.files?.length ? (
               componentDetails.files.map((file) => (
-                <Badge key={file} variant="outline">
-                  {file}
+                <Badge key={file.path} variant="outline">
+                  {file.path}
                 </Badge>
               ))
             ) : (

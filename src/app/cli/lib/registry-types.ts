@@ -40,13 +40,36 @@ export interface RegistryIndex {
   stats: RegistryStats
 }
 
+export interface ComponentFile {
+  path: string
+  content: string
+  type: string
+}
+
+export interface ComponentMeta {
+  library: string
+  hasPreview: boolean
+}
+
+export interface ComponentTailwind {
+  config: Record<string, any>
+}
+
+export interface ComponentCssVars {
+  light: Record<string, any>
+  dark: Record<string, any>
+}
+
 export interface ComponentDetails {
   name: string
   type: string
-  dependencies?: string[]
-  files?: string[]
-  registryDependencies?: string[]
-  styles?: string[]
+  dependencies: string[]
+  devDependencies: string[]
+  registryDependencies: string[]
+  files: ComponentFile[]
+  meta: ComponentMeta
+  tailwind: ComponentTailwind
+  cssVars: ComponentCssVars
 }
 
 export interface RegistryError {
