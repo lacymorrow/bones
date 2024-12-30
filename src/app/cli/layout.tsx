@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from "next";
 
 import { RootLayout } from "@/components/layouts/root-layout";
 import { siteConfig } from "@/config/site";
+import Link from 'next/link'
 
 export const metadata: Metadata = {
 	title: {
@@ -77,5 +78,29 @@ export default function Layout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <RootLayout>{children}</RootLayout>;
+	return (
+		<RootLayout>
+			<div>
+				<nav className="border-b">
+					<div className="container mx-auto px-4">
+						<div className="flex h-14 items-center space-x-4">
+							<Link 
+								href="/cli"
+								className="text-sm font-medium transition-colors hover:text-primary"
+							>
+								Install
+							</Link>
+							<Link 
+								href="/cli/registry"
+								className="text-sm font-medium transition-colors hover:text-primary"
+							>
+								Registry
+							</Link>
+						</div>
+					</div>
+				</nav>
+				<main>{children}</main>
+			</div>
+		</RootLayout>
+	)
 }
