@@ -162,7 +162,6 @@ export function RegistryBrowser() {
       const cleanPath = selectedComponent.path.replace(/^\.\//, '')
       const fullPath = `${baseDir}/${cleanPath}`
       const fullUrl = `${registryUrl}/${fullPath}`
-
       const args = ['shadcn@latest', 'add', `"${fullUrl}"`, '--overwrite', '--yes']
 
       console.log('Installing component:', {
@@ -192,6 +191,19 @@ export function RegistryBrowser() {
       setInstalling(false)
     }
   }
+
+  const [pendingPaths, setPendingPaths] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    pendingPaths.forEach(async path => {
+      await loadComponentIndex(path)
+      setPendingPaths(prev => {
+        const next = new Set(prev)
+        next.delete(path)
+        return next
+      })
+    })
+  }, [pendingPaths])
 
   const renderRegistryGroup = (group: RegistryGroup) => {
     return (
@@ -240,7 +252,11 @@ export function RegistryBrowser() {
                 key={theme.path}
                 element={theme.theme}
                 value={theme.path}
-                onExpand={() => loadComponentIndex(theme.path)}
+                onExpand={() => {
+                  if (!pendingPaths.has(theme.path)) {
+                    setPendingPaths(prev => new Set(prev).add(theme.path))
+                  }
+                }}
               >
                 {renderComponentIndex(theme.path)}
               </Folder>
@@ -254,7 +270,10 @@ export function RegistryBrowser() {
   const renderComponentIndex = (path: string) => {
     const state = treeState[path]
     if (!state) {
-      loadComponentIndex(path)
+      // Queue the path for loading instead of loading directly
+      if (!pendingPaths.has(path)) {
+        setPendingPaths(prev => new Set(prev).add(path))
+      }
       return <div className="pl-4">Loading...</div>
     }
 
@@ -277,7 +296,6 @@ export function RegistryBrowser() {
     }
 
     return state.data.components.map(component => {
-      // Only make .json files clickable
       const isJsonFile = component.path.endsWith('.json')
       
       return (

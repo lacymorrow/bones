@@ -170,8 +170,7 @@ export default function RegistryPage() {
     return (
       <ScrollArea className="h-[600px] rounded-md border">
         <div className="p-4">
-          {registry.registry.map((group) => {
-            console.log('Processing group:', group.type, 'Components:', JSON.stringify(group.components, null, 2))
+          {registry?.registry?.map((group) => {
             return (
               <div key={group.type} className="mb-6">
                 <div className="flex items-center gap-2 mb-2">
@@ -179,26 +178,23 @@ export default function RegistryPage() {
                     {group.type.replace('registry:', '')}
                   </h2>
                   <Badge variant="secondary">
-                    {registry.stats.componentsByType[group.type] || 0}
+                    {registry.stats?.componentsByType?.[group.type] || 0}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  {group.components.map((component) => {
-                    console.log('Rendering component:', component.name, 'with path:', component.path)
-                    return (
-                      <button
-                        key={component.name}
-                        onClick={() => handleComponentClick(component)}
-                        className={`w-full text-left px-3 py-2 rounded-lg hover:bg-accent ${
-                          selectedComponent?.name === component.name
-                            ? 'bg-accent'
-                            : ''
-                        }`}
-                      >
-                        {component.name}
-                      </button>
-                    )
-                  })}
+                  {group.components?.map((component) => (
+                    <button
+                      key={component.name}
+                      onClick={() => handleComponentClick(component)}
+                      className={`w-full text-left px-3 py-2 rounded-lg hover:bg-accent ${
+                        selectedComponent?.name === component.name
+                          ? 'bg-accent'
+                          : ''
+                      }`}
+                    >
+                      {component.name}
+                    </button>
+                  ))}
                 </div>
               </div>
             )
