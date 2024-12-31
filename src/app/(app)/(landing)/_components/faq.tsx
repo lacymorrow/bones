@@ -1,11 +1,11 @@
 import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
-import { getPayloadContent } from "@/lib/utils/get-payload-content";
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/accordion";
 import { cn } from "@/lib/utils";
+import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";
 import type { HTMLAttributes } from "react";
 
