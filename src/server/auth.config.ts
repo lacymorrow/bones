@@ -1,4 +1,5 @@
 import { routes } from "@/config/routes";
+import { env } from "@/env";
 import type { NextAuthConfig } from "next-auth";
 import { providers } from "./auth.providers";
 import { ActivityLogger } from "./utils/activity-logger";
@@ -26,6 +27,7 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthConfig = {
 	// debug: process.env.NODE_ENV !== "production"
+	secret: env.AUTH_SECRET ?? "supersecret",
 	trustHost: true,
 	providers,
 	pages: {
