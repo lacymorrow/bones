@@ -1,6 +1,6 @@
 'use client'
 
-import { File, Folder, Tree } from '@/app/(app)/browser/_components/file-tree'
+import { File, Folder, Tree } from '@/app/(app)/cli/_components/file-tree'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
