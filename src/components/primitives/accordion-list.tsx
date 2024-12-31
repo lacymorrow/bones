@@ -1,19 +1,19 @@
 import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/accordion";
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
-
-export interface AccordionItem {
+import type React from "react";
+export interface AccordionItemType {
   title: string;
   content: React.ReactNode;
 }
 
 interface AccordionListProps {
-  items: AccordionItem[];
-  accordionProps?: any; // TODO: fix type
+  items: AccordionItemType[];
+  accordionProps?: React.ComponentProps<typeof Accordion>;
 }
 
 export const AccordionList: React.FC<AccordionListProps> = ({

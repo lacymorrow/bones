@@ -5,11 +5,12 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Toaster, toast } from 'sonner'
 import { getProjectRoot } from '../actions'
 import { fetchComponentDetails, fetchRegistry, isRegistryError } from '../lib/registry-service'
 import { ComponentDetails, RegistryComponent, RegistryIndex } from '../lib/registry-types'
+import { runCliCommand } from './actions'
 
 // Get this from your environment or configuration
 const BASE_URL = 'http://localhost:3000/ui/download'
@@ -122,23 +123,9 @@ export default function RegistryPage() {
       console.log('- Args:', JSON.stringify(args))
       console.log('- CWD:', projectRoot)
 
-      const response = await fetch('/api/run', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          command: 'npx',
-          args,
-          cwd: projectRoot
-        })
-      })
+      const stream = await runCliCommand('npx', args, projectRoot)
 
-      if (!response.ok) {
-        throw new Error('Failed to start installation')
-      }
-
-      const reader = response.body?.getReader()
+      const reader = stream.getReader()
       if (!reader) {
         throw new Error('No response stream available')
       }
@@ -313,7 +300,7 @@ export default function RegistryPage() {
         {installOutput.length > 0 && (
           <div>
             <h3 className="font-medium mb-2">Installation Output</h3>
-            <ScrollArea 
+            <ScrollArea
               ref={outputRef}
               className="h-[200px] w-full rounded-md border bg-muted p-4"
             >
@@ -350,13 +337,13 @@ export default function RegistryPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-6">
       <Toaster />
       <div className="grid grid-cols-5 gap-6">
         <div className="col-span-2">
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Component Registry</h1>
-            {registry && (
+            {registry?.stats?.totalComponents !== undefined && (
               <p className="text-muted-foreground">
                 {registry.stats.totalComponents} components available
               </p>
