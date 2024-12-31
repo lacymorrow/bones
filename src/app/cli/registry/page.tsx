@@ -1,13 +1,18 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { fetchRegistry, fetchComponentDetails, isRegistryError } from '../lib/registry-service'
-import { RegistryIndex, ComponentDetails, RegistryComponent } from '../lib/registry-types'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useEffect, useState, useRef } from 'react'
+import { Toaster, toast } from 'sonner'
+import { getProjectRoot } from '../actions'
+import { fetchComponentDetails, fetchRegistry, isRegistryError } from '../lib/registry-service'
+import { ComponentDetails, RegistryComponent, RegistryIndex } from '../lib/registry-types'
+
+// Get this from your environment or configuration
+const BASE_URL = 'http://localhost:3000/ui/download'
 
 export default function RegistryPage() {
   const [registry, setRegistry] = useState<RegistryIndex | null>(null)
@@ -16,18 +21,49 @@ export default function RegistryPage() {
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState(true)
   const [loadingDetails, setLoadingDetails] = useState(false)
+  const [installing, setInstalling] = useState(false)
+  const [projectRoot, setProjectRoot] = useState<string>('')
+  const [installOutput, setInstallOutput] = useState<string[]>([])
+  const outputRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll output to bottom
+  useEffect(() => {
+    if (outputRef.current) {
+      outputRef.current.scrollTop = outputRef.current.scrollHeight
+    }
+  }, [installOutput])
+
+  useEffect(() => {
+    async function init() {
+      try {
+        console.log('Getting project root...')
+        const root = await getProjectRoot()
+        console.log('Project root:', root)
+        setProjectRoot(root)
+      } catch (err) {
+        const error = err instanceof Error ? err.message : 'Failed to get project root'
+        console.error('Error getting project root:', error)
+        setError(error)
+      }
+    }
+
+    init()
+  }, [])
 
   useEffect(() => {
     async function loadRegistry() {
+      console.log('Loading registry...')
       const data = await fetchRegistry()
-      
+
       if (isRegistryError(data)) {
+        console.error('Failed to load registry:', data.message)
         setError(data.message)
         setLoading(false)
         return
       }
 
-      console.log('Full registry data:', JSON.stringify(data, null, 2))
+      console.log('Registry loaded successfully')
+      console.log('Registry data:', JSON.stringify(data, null, 2))
       setRegistry(data)
       setLoading(false)
     }
@@ -36,21 +72,109 @@ export default function RegistryPage() {
   }, [])
 
   async function handleComponentClick(component: RegistryComponent) {
-    console.log('Clicked component:', JSON.stringify(component, null, 2))
+    console.log('Component clicked:', component.name)
+    console.log('Component details:', JSON.stringify(component, null, 2))
     setSelectedComponent(component)
     setLoadingDetails(true)
     setComponentDetails(null)
+    setInstallOutput([]) // Clear previous output
 
+    console.log('Fetching component details from:', component.path)
     const details = await fetchComponentDetails(component.path)
-    
+
     if (isRegistryError(details)) {
+      console.error('Failed to load component details:', details.message)
       setError(details.message)
       setLoadingDetails(false)
       return
     }
 
+    console.log('Component details loaded:', JSON.stringify(details, null, 2))
     setComponentDetails(details)
     setLoadingDetails(false)
+  }
+
+  async function handleInstall() {
+    if (!componentDetails || !selectedComponent) {
+      console.error('No component details available')
+      return
+    }
+
+    if (!projectRoot) {
+      console.error('Project root not found')
+      toast.error('Project root not found. Please make sure you are in a Next.js project with components.json')
+      return
+    }
+
+    console.log('Starting installation of component:', componentDetails.name)
+    setInstalling(true)
+    setInstallOutput([]) // Clear previous output
+
+    try {
+      // Run the shadcn CLI command
+      const url = `${BASE_URL}/${selectedComponent.path}`
+      const command = `npx shadcn@latest add "${url}" --overwrite --yes`
+      const args = ['shadcn@latest', 'add', `"${url}"`, '--overwrite', '--yes']
+
+      console.log('Installation details:')
+      console.log('- Command:', command)
+      console.log('- URL:', url)
+      console.log('- Args:', JSON.stringify(args))
+      console.log('- CWD:', projectRoot)
+
+      const response = await fetch('/api/run', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          command: 'npx',
+          args,
+          cwd: projectRoot
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to start installation')
+      }
+
+      const reader = response.body?.getReader()
+      if (!reader) {
+        throw new Error('No response stream available')
+      }
+
+      const decoder = new TextDecoder()
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value)
+        const lines = chunk
+          .split('\n')
+          .filter(line => line.trim().startsWith('data: '))
+          .map(line => {
+            try {
+              const data = JSON.parse(line.slice(6))
+              return data.content || ''
+            } catch {
+              return ''
+            }
+          })
+          .filter(Boolean)
+
+        setInstallOutput(prev => [...prev, ...lines])
+      }
+
+      console.log('Installation complete for component:', componentDetails.name)
+      toast.success(`Installed ${componentDetails.name} component`)
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'Failed to install component'
+      console.error('Installation error:', error)
+      toast.error(error)
+      setError(error)
+    } finally {
+      setInstalling(false)
+    }
   }
 
   const renderComponentList = () => {
@@ -79,8 +203,8 @@ export default function RegistryPage() {
                         key={component.name}
                         onClick={() => handleComponentClick(component)}
                         className={`w-full text-left px-3 py-2 rounded-lg hover:bg-accent ${
-                          selectedComponent?.name === component.name 
-                            ? 'bg-accent' 
+                          selectedComponent?.name === component.name
+                            ? 'bg-accent'
                             : ''
                         }`}
                       >
@@ -113,7 +237,46 @@ export default function RegistryPage() {
     return (
       <div className="p-6 space-y-6">
         <div>
-          <h2 className="text-2xl font-bold mb-2">{componentDetails.name}</h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-2xl font-bold">{componentDetails.name}</h2>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const url = `${BASE_URL}/${selectedComponent?.path}`
+                  console.log('Copying URL:', url)
+                  navigator.clipboard.writeText(url)
+                  toast.success('URL copied to clipboard')
+                }}
+              >
+                Copy URL
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const url = `${BASE_URL}/${selectedComponent?.path}`
+                  const command = `npx shadcn@latest add "${url}" --overwrite --yes`
+                  console.log('Copying install command:', command)
+                  navigator.clipboard.writeText(command)
+                  toast.success('Install command copied to clipboard')
+                }}
+              >
+                Copy Install Command
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(componentDetails, null, 2))
+                  toast.success('JSON copied to clipboard')
+                }}
+              >
+                Copy JSON
+              </Button>
+            </div>
+          </div>
           <Badge>{componentDetails.type}</Badge>
         </div>
 
@@ -147,15 +310,27 @@ export default function RegistryPage() {
           </div>
         </div>
 
+        {installOutput.length > 0 && (
+          <div>
+            <h3 className="font-medium mb-2">Installation Output</h3>
+            <ScrollArea 
+              ref={outputRef}
+              className="h-[200px] w-full rounded-md border bg-muted p-4"
+            >
+              <pre className="text-sm">
+                {installOutput.join('\n')}
+              </pre>
+            </ScrollArea>
+          </div>
+        )}
+
         <div className="pt-4">
-          <Button 
+          <Button
             className="w-full"
-            onClick={() => {
-              // TODO: Implement install action
-              console.log('Install:', componentDetails.name)
-            }}
+            onClick={handleInstall}
+            disabled={installing}
           >
-            Install Component
+            {installing ? 'Installing...' : 'Install Component'}
           </Button>
         </div>
       </div>
@@ -176,6 +351,7 @@ export default function RegistryPage() {
 
   return (
     <div className="p-8">
+      <Toaster />
       <div className="grid grid-cols-5 gap-6">
         <div className="col-span-2">
           <div className="mb-6">

@@ -1,10 +1,63 @@
 'use server'
 
 import path from 'path'
+import fs from 'fs/promises'
 import { AddComponentInput, addComponentSchema, ComponentResult } from './lib/types'
 import { checkComponentExists, checkConfigExists } from './lib/utils'
 import { DEFAULT_COMPONENT_PATH } from './lib/constants'
 import { spawnShadcnCommand, buildShadcnCommand } from './lib/shadcn'
+
+interface WriteFileInput {
+  path: string
+  content: string
+}
+
+interface WriteFileResult {
+  success: boolean
+  error?: string
+}
+
+export async function writeFile(input: WriteFileInput): Promise<WriteFileResult> {
+  try {
+    console.log('Writing file:', input.path)
+    console.log('Content length:', input.content.length)
+    
+    const cwd = process.cwd()
+    const fullPath = path.join(cwd, input.path)
+    console.log('Full path:', fullPath)
+    
+    // Ensure the directory exists
+    const dir = path.dirname(fullPath)
+    console.log('Creating directory:', dir)
+    await fs.mkdir(dir, { recursive: true })
+    
+    // Write the file
+    console.log('Writing content to file...')
+    await fs.writeFile(fullPath, input.content, 'utf-8')
+    console.log('File written successfully')
+    
+    return { success: true }
+  } catch (error) {
+    console.error('Error writing file:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to write file'
+    }
+  }
+}
+
+export async function getProjectRoot(): Promise<string> {
+  const root = process.cwd()
+  
+  try {
+    // Verify this is actually our project root by checking for package.json
+    await fs.access(path.join(root, 'package.json'))
+    await fs.access(path.join(root, 'components.json'))
+    return root
+  } catch {
+    throw new Error('Could not find project root. Make sure you are in a Next.js project with components.json')
+  }
+}
 
 export async function addComponent(input: AddComponentInput): Promise<ComponentResult> {
   const { name, path: targetPath, overwrite } = addComponentSchema.parse(input)
@@ -21,22 +74,28 @@ export async function addComponent(input: AddComponentInput): Promise<ComponentR
     const exists = await checkComponentExists(name, componentDir)
 
     if (exists && !overwrite) {
-      throw new Error(
-        `Component ${name} already exists. Use the overwrite option if you want to replace it.`
-      )
+      throw new Error(`Component ${name} already exists. Use --overwrite to overwrite.`)
     }
 
-    // Build and execute the shadcn command
-    const command = buildShadcnCommand(name, overwrite, targetPath)
-    const result = await spawnShadcnCommand({ command, cwd })
+    // Build the shadcn command
+    const command = buildShadcnCommand({
+      component: name,
+      path: targetPath,
+      overwrite
+    })
 
-    if (!result.success) {
+    // Run the command
+    const result = await spawnShadcnCommand(command, cwd)
+
+    if (result.error) {
       throw new Error(result.error)
     }
 
-    return { success: true }
+    return {
+      success: true,
+      message: `Added ${name} component`
+    }
   } catch (error) {
-    console.error('Error adding component:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to add component'
