@@ -7,10 +7,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import path from 'path'
 import { useEffect, useRef, useState } from 'react'
 import { Toaster, toast } from 'sonner'
-import { getProjectRoot } from '../actions'
+import { getProjectRoot, runCliCommand } from '../../actions'
 import { fetchComponentDetails, fetchComponentIndex, fetchRootRegistry } from '../lib/registry-service'
 import { ComponentDetails, ComponentIndex, RegistryGroup } from '../lib/registry-types'
-import { runCliCommand } from './actions'
 import { Folder, Tree } from './file-tree'
 import { RegistrySelector } from './registry-selector'
 
@@ -424,7 +423,7 @@ export function RegistryBrowser() {
 	return (
 		<div className="space-y-6">
 			<RegistrySelector value={registryUrl} onChange={setRegistryUrl} />
-			
+
 			<div className="grid grid-cols-[300px_1fr] gap-6">
 				<div className="rounded-lg border bg-card text-card-foreground shadow-sm">
 					<div className="p-2 border-b bg-muted/40">
