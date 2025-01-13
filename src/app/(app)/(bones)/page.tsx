@@ -1,23 +1,69 @@
-import { Balancer } from "@/components/primitives/balancer";
-import { Link } from "@/components/primitives/link";
+import { Attribution } from "@/components/blocks/attribution";
+import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button-2";
+import { Link } from "@/components/primitives/link-with-transition";
+import {
+	PageHeader,
+	PageHeaderDescription,
+	PageHeaderHeading,
+} from "@/components/primitives/page-header";
 import { buttonVariants } from "@/components/ui/button";
+import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
+import { Barrio, Stick } from "next/font/google";
+
+const font = Stick({
+	weight: ["400"],
+	style: ["normal"],
+	subsets: ["latin"],
+	variable: "--font-stick",
+});
+
+const fontBarrio = Barrio({
+	weight: ["400"],
+	style: ["normal"],
+	subsets: ["latin"],
+	variable: "--font-barrio",
+});
 
 export default function Page() {
 	return (
 		<>
-			<div className="container absolute inset-0 flex flex-col items-center justify-start p-16 gap-xl">
-				<Balancer className="text-[100px] font-bold"><span className="font-serif">Bones Stack</span></Balancer>
-				<p className="text-lg">Build apps fast with Shadcn/UI. Features Next.js v15, Tailwind CSS v4, and full AI agent support.</p>
+			<div className="container flex flex-col items-center justify-start gap-2xl p-16 text-center">
+				<PageHeader className="flex flex-col items-center justify-center">
+					<PageHeaderHeading
+						className={cn("font-bold md:text-[8rem]", fontBarrio.className)}
+					>
+						Bones
+					</PageHeaderHeading>
+					<PageHeaderDescription className="text-xl">
+						The Next.js stack for Shadcn/UI.
+					</PageHeaderDescription>
+					<PageHeaderDescription className="text-lg text-muted-foreground">
+						Next.js v15, Tailwind CSS v4, Auth.JS v5, and a built-in interface
+						for installing UI components.
+					</PageHeaderDescription>
+				</PageHeader>
 
-				<div className="flex flex-col md:flex-row gap-md">
-					<Link href={"https://github.com/shipkit-io/bones"} className={buttonVariants({ variant: "outline", size: "lg" })}>Learn More</Link>
-					<Link href={"https://shipkit.io"} className={buttonVariants({ variant: "default", size: "lg" })}>Get Started</Link>
+				<div className="mb-10 flex flex-col gap-md md:flex-row">
+					<Link
+						href={"https://github.com/shipkit-io/bones"}
+						className={buttonVariants({ variant: "outline", size: "lg" })}
+					>
+						Learn More
+					</Link>
+					<DeployToVercelButton href={routes.external.vercelDeployBones} />
 				</div>
 
-				<div className="flex flex-col md:flex-row gap-md">
-					Want to see your users logs in real-time? <Link href={"https://log.bones.sh"} className={buttonVariants({ variant: "link", size: "sm" })}>Check out LogBones!</Link>
+				<div className="mt-auto flex flex-col items-center gap-md text-sm md:flex-row">
+					<Link
+						href={"https://log.bones.sh"}
+						className={buttonVariants({ variant: "link", size: "sm" })}
+					>
+						See user errors in real-time with Bones Log
+					</Link>
 				</div>
 			</div>
+			<Attribution variant="popover" />
 		</>
 	);
 }

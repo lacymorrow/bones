@@ -1,4 +1,4 @@
-import { Link } from "@/components/primitives/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Button } from "@/components/ui/button";
 import type React from "react";
 
